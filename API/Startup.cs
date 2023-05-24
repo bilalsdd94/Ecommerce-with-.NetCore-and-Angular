@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using StackExchange.Redis;
 
 namespace API
 {
@@ -35,7 +36,16 @@ namespace API
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddControllers();
             services.AddDbContext<StoreContext>(x =>
-                x.UseSqlite(_config.GetConnectionString("DefaultConnection")));    
+                x.UseSqlite(_config.GetConnectionString("DefaultConnection")));
+
+            services.AddSingleton<IConnectionMultiplexer>(c => 
+            {
+                var options = ConfigurationOptions.Parse(_config.GetConnectionString("Redis"));
+                return ConnectionMultiplexer.Connect(options);
+            });
+
+            services.AddScoped<IBasketRepository,BasketRepository>();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "API", Version = "v1" });
