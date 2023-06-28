@@ -62,5 +62,10 @@ namespace Infrastructure.Data
                 logger.LogError(ex.Message);
             }
         }
+
+        public static Task SeedAsync(StoreContext context)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
