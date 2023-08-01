@@ -1,7 +1,8 @@
 <div class="form-floating mb-3"> 
     <input type={{type}}
     [formControl]="control"
-    placeholder={{label}},
+    placeholder={{label}}
+    class="form-control"
     [ngClass]="(control.touched) ? control.invalid ? 'is-invalid' : 'is-valid' : null">
 
     <div *ngIf="control.status === 'PENDING'" class="fa fa-spinner fa-spin loader"></div>
