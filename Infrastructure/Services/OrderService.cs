@@ -31,7 +31,7 @@ namespace Infrastructure.Services
                 var itemOrdered = new ProductItemOrdered(productItem.Id,productItem.Name,productItem.PictureUrl);
                 var orderItem = new OrderItem(itemOrdered,productItem.Price,item.Quantity);
                 items.Add(orderItem);
-            }
+            }            
             //get delivery mthod from repo
             var deliveryMethod = await _unitOfWork.Repository<DeliveryMethod>().GetByIdAsync(deliveryMethodId);
 
