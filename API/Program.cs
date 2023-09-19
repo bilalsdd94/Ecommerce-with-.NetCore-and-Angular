@@ -32,9 +32,8 @@ app.UseStaticFiles();
 app.UseStaticFiles(new StaticFileOptions
 {
     FileProvider = new PhysicalFileProvider(
-        Path.Combine(Directory.GetCurrentDirectory(),"Content")), RequestPath="/Content"
+        Path.Combine(Directory.GetCurrentDirectory(), "Content")), RequestPath = "/Content"
 });
-
 app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
