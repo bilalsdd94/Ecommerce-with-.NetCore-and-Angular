@@ -10,7 +10,7 @@ namespace API.Dtos
     {
         
         [Required]
-        public int id { get; set; }
+        public int Id { get; set; }
         
         [Required]
         public string ProductName { get; set; }

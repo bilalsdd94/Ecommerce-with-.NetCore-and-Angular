@@ -34,6 +34,7 @@ app.UseStaticFiles(new StaticFileOptions
     FileProvider = new PhysicalFileProvider(
         Path.Combine(Directory.GetCurrentDirectory(), "Content")), RequestPath = "/Content"
 });
+
 app.UseCors("CorsPolicy");
 
 app.UseAuthentication();
@@ -46,7 +47,7 @@ app.MapFallbackToController("Index","Fallback");
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;
 var context = services.GetRequiredService<StoreContext>();
-var identityContext = services.GetRequiredService<AppIdentityDbContext>();
+// var identityContext = services.GetRequiredService<AppIdentityDbContext>();
 var userManager = services.GetRequiredService<UserManager<AppUser>>();
 var logger = services.GetRequiredService<ILogger<Program>>();
 
@@ -55,9 +56,12 @@ try
 {
     
     await context.Database.MigrateAsync();
-    await identityContext.Database.MigrateAsync();
+    // await identityContext.Database.MigrateAsync();
     await StoreContextSeed.SeedAsync(context);
-    await AppIdentityDbContextSeed.SeedUsersAsync(userManager);
+    var roleManager = services.GetRequiredService<RoleManager<AppRole>>();
+    var identityContext = services.GetRequiredService<AppIdentityDbContext>();
+    await identityContext.Database.MigrateAsync();
+    await AppIdentityDbContextSeed.SeedUsersAsync(userManager,roleManager);
     
 }
 catch (Exception ex)

@@ -12,6 +12,7 @@ import { StepperComponent } from './components/stepper/stepper.component';
 import {CdkStepperModule} from '@angular/cdk/stepper';
 import { BasketSummaryComponent } from './basket-summary/basket-summary.component'
 import { RouterModule } from '@angular/router';
+import { CurrencyMaskModule } from 'ng2-currency-mask';
 @NgModule({
   declarations: [
     PagingHeaderComponent,
@@ -29,7 +30,8 @@ import { RouterModule } from '@angular/router';
     FormsModule,
     BsDropdownModule.forRoot(),
     CdkStepperModule,
-    RouterModule
+    RouterModule,
+    CurrencyMaskModule
   ],
   exports: [
     PaginationModule,
@@ -38,11 +40,13 @@ import { RouterModule } from '@angular/router';
     CarouselModule,
     OrderTotalsComponent,
     ReactiveFormsModule,
+    FormsModule,
     BsDropdownModule,
     TextInputComponent,
     CdkStepperModule,
     StepperComponent,
     BasketSummaryComponent,
+    CurrencyMaskModule
   ]
 })
 export class SharedModule { }

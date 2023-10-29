@@ -40,7 +40,7 @@ namespace API.Controllers
             
             return new UserDto{
                 Email = user.Email,
-                Token = _tokenService.CreateToken(user),
+                Token = await _tokenService.CreateToken(user),
                 DisplayName = user.DisplayName
             };
         }
@@ -82,21 +82,19 @@ namespace API.Controllers
             if(!result.Succeeded) return Unauthorized(new ApiResponse(401));
             return new UserDto{
                 Email = user.Email,
-                Token = _tokenService.CreateToken(user),
+                Token = await _tokenService.CreateToken(user),
                 DisplayName = user.DisplayName
             };
         }
-
-        [HttpPost("register")]
-        public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto )
+[HttpPost("register")]
+        public async Task<ActionResult<UserDto>> Register(RegisterDto registerDto)
         {
-            if(CheckEmailExistsAsync(registerDto.Email).Result.Value){
-                return new BadRequestObjectResult(new ApiValidationErrorResponse{Errors = new [] {
-                    "Email Address is in Use"
-                }});
+            if (CheckEmailExistsAsync(registerDto.Email).Result.Value)
+            {
+                return new BadRequestObjectResult(new ApiValidationErrorResponse{Errors = new []{"Email address is in use"}});
             }
 
-            var user = new AppUser 
+            var user = new AppUser
             {
                 DisplayName = registerDto.DisplayName,
                 Email = registerDto.Email,
@@ -104,12 +102,17 @@ namespace API.Controllers
             };
 
             var result = await _userManager.CreateAsync(user, registerDto.Password);
+
+            if (!result.Succeeded) return BadRequest(new ApiResponse(400));
+
+            var roleAddResult = await _userManager.AddToRoleAsync(user, "Member");
             
-            if(!result.Succeeded) return BadRequest(new ApiResponse(400));
+            if (!roleAddResult.Succeeded) return BadRequest("Failed to add to role");
+
             return new UserDto
             {
                 DisplayName = user.DisplayName,
-                Token = _tokenService.CreateToken(user),
+                Token = await _tokenService.CreateToken(user),
                 Email = user.Email
             };
         }

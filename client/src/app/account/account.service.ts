@@ -13,7 +13,18 @@ export class AccountService {
   private currentUserSource = new ReplaySubject<User | null>(1);
   currentUser$ = this.currentUserSource.asObservable();
   
+  private isAdminSource = new ReplaySubject<boolean>(1);
+  isAdmin$ = this.isAdminSource.asObservable();
   constructor(private http: HttpClient, private router: Router) { }
+  //returns boolean
+  isAdmin(token: string): any {
+    if (token) {
+      const decodedToken = JSON.parse(window.atob(token.split('.')[1]));
+      if (decodedToken.role.indexOf('Admin') > -1) {
+        return true;
+      }
+    }
+  }
 
   loadCurrentUser(token: string | null)
   {
@@ -30,6 +41,7 @@ export class AccountService {
         if(user){
           localStorage.setItem('token',user.token);
           this.currentUserSource.next(user);
+          this.isAdminSource.next(this.isAdmin(user.token));
           return user;
         }
         else{
@@ -47,6 +59,7 @@ export class AccountService {
       map(user => {
         localStorage.setItem('token',user.token);
         this.currentUserSource.next(user);
+        this.isAdminSource.next(this.isAdmin(user.token));
       })
     );
   }

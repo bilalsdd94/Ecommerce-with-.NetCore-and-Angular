@@ -40,7 +40,7 @@ namespace Infrastructure.Services
 
             foreach (var item in basket.Items)
             {
-                var productItem = await _unitOfWork.Repository<Product>().GetByIdAsync(item.id);
+                var productItem = await _unitOfWork.Repository<Product>().GetByIdAsync(item.Id);
                 if (item.Price != productItem.Price)
                 {
                     item.Price = productItem.Price;

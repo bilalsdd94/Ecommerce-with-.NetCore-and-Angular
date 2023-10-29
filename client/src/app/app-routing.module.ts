@@ -5,6 +5,7 @@ import { TestErrorComponent } from './core/test-error/test-error.component';
 import { NotFoundComponent } from './core/not-found/not-found.component';
 import { ServerErrorComponent } from './core/server-error/server-error.component';
 import { authGuard } from './core/guards/authGuard';
+import { AdminGuard } from './core/guards/admin.guard';
 
 const routes: Routes = [
   {path: '', component: HomeComponent, data: {breadcrumb : 'Home'}},  
@@ -19,12 +20,25 @@ const routes: Routes = [
     canActivate: [authGuard],
     loadChildren: () =>  import('./checkout/checkout.module').then(m => m.CheckoutModule)
   },
-  {path: 'orders',canActivate: [authGuard],
+  {
+    path: 'orders',canActivate: [authGuard],
     loadChildren: () => import('./orders/orders.module').then(mod => mod.OrdersModule),
     data: { breadcrumb: 'Orders' }
   },
-  {path: 'account', loadChildren: () => import('./account/account.module').then(mod => mod.AccountModule),
+  {
+    path: 'account', loadChildren: () => import('./account/account.module').then(mod => mod.AccountModule),
     data: { breadcrumb: {skip: true} }},
+    {
+      path: 'admin',
+      loadChildren: () => import('./admin/admin.module')
+        .then(mod => mod.AdminModule), data: { breadcrumb: 'Admin' }
+    },
+    {
+      path: 'admin',
+      canActivate: [authGuard, AdminGuard],
+      loadChildren: () => import('./admin/admin.module')
+        .then(mod => mod.AdminModule), data: { breadcrumb: 'Admin' }
+    },
   { path: '**', redirectTo: 'not-found', pathMatch: 'full' }
 
 ];

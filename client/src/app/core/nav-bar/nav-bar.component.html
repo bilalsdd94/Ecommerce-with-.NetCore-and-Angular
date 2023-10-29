@@ -9,6 +9,7 @@
         <a class="p-2" routerLink="/shop" routerLinkActive="active">Shop</a>
         <a class="p-2" routerLink="/contact" routerLinkActive="active">Contact</a>        
         <a class="p-2" routerLink="/test-error" routerLinkActive="active">Errors</a>
+        <a *ngIf="(isAdmin$ | async)" class="p-2" routerLink="/admin" routerLinkActive="active">Admin</a>
     </nav>
     
     <div class="d-flex align-items-center">

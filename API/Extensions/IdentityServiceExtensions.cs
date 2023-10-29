@@ -12,17 +12,31 @@ namespace API.Extensions
     {
         public static IServiceCollection AddIdentityServices(this IServiceCollection services, 
             IConfiguration config)
-        {
+        {            
             services.AddDbContext<AppIdentityDbContext>(opt =>
             {
                 opt.UseNpgsql(config.GetConnectionString("IdentityConnection"));
             });
 
-            services.AddIdentityCore<AppUser>(opt => {
-                //add identity optionsh here
-            })
-            .AddEntityFrameworkStores<AppIdentityDbContext>()
-            .AddSignInManager<SignInManager<AppUser>>();
+            // services.AddIdentityCore<AppUser>(opt => {
+            //     //add identity optionsh here
+                
+                
+            // })
+
+            
+            // .AddEntityFrameworkStores<AppIdentityDbContext>()
+            // .AddSignInManager<SignInManager<AppUser>>();
+
+
+             var builder = services.AddIdentityCore<AppUser>();
+
+            builder = new IdentityBuilder(builder.UserType, typeof(AppRole), builder.Services);
+            builder.AddEntityFrameworkStores<AppIdentityDbContext>();
+            builder.AddSignInManager<SignInManager<AppUser>>();
+            builder.AddRoleValidator<RoleValidator<AppRole>>();
+            builder.AddRoleManager<RoleManager<AppRole>>();
+
             //authentication always comes first
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options => 
